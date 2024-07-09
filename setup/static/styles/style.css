@@ -23,6 +23,7 @@ time, mark, audio, video {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+    
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
@@ -32,7 +33,7 @@ footer, header, hgroup, menu, nav, section {
 body {
     line-height: 1;
     font-family: 'Space Grotesk', sans-serif;
-    min-height: 100vh;
+    min-height: 50vh;
     background: linear-gradient(#041833,#04244F,#154580);
     background-repeat: no-repeat;
     background-position: center;
@@ -338,7 +339,7 @@ table {
     padding: 1.5rem 3rem;
     box-sizing: border-box;
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     color: #FFFFFF;
 }
 
