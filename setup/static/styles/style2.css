@@ -1,0 +1,20 @@
+body {
+    background: linear-gradient(#041833,#04244F,#154580);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+.cadastro{
+    width: 250px;
+    height: 250px;
+    margin: 20vh auto auto auto;
+    border: 2px solid #C98CF1;
+    border-radius: 15%;
+    align-content: center;
+}
+.filling_fields{
+    display: block;
+    justify-content: center;
+    margin: 15px auto;
+    align-items: center;
+    padding: 7px;
+}
