@@ -21,4 +21,6 @@ def buscar(request):
             return render(request, 'galeria/buscar.html', {"cards": fotografias})
         elif nome_a_buscar == '':
             return render(request, 'galeria/buscar.html')
+        else:
+            return render(request, 'galeria/buscar.html')
     
