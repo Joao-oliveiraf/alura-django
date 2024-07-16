@@ -1,9 +1,13 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from galeria.models import Fotografia
 from django.db.models import Q
+from django.contrib import messages
 
 
 def index(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Faça login para acessar a galeria!')
+        return redirect('login')
     fotografias = Fotografia.objects.order_by("-data_fotografia").filter(publicada=True)
     return render(request, 'galeria/index.html', {"cards": fotografias})
 
@@ -12,10 +16,13 @@ def imagem(request, foto_id):
     return render(request, 'galeria/imagem.html', {"fotografia": foto})
 
 def buscar(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Faça login ou cadastre-se')
+        return redirect('login')
     fotografias = Fotografia.objects.order_by("-data_fotografia").filter(publicada=True)
 
-    if "test" in request.GET:
-        nome_a_buscar = request.GET['test']
+    if "buscar" in request.GET:
+        nome_a_buscar = request.GET['buscar']
         if fotografias.filter(Q(nome__icontains=nome_a_buscar) | Q(legenda__icontains=nome_a_buscar)):
             fotografias = fotografias.filter(Q(nome__icontains=nome_a_buscar) | Q(legenda__icontains=nome_a_buscar))
             return render(request, 'galeria/buscar.html', {"cards": fotografias})

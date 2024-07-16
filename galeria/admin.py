@@ -4,11 +4,11 @@ from galeria.models import Fotografia
 
 
 class ListandoFotografias(admin.ModelAdmin):
-    list_display = ("id", "nome", "legenda", "data_fotografia", "publicada")
+    list_display = ("id", "nome", "legenda", "data_fotografia", "publicada", "usuario")
     list_display_links = ("id", "nome")
     list_editable = ("publicada",)
     search_fields = ("nome", "legenda")
-    list_filter = ("categoria",)
+    list_filter = ("categoria", "usuario")
     list_per_page = 10
 
 

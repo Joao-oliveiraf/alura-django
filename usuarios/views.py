@@ -1,3 +1,4 @@
+from re import U
 from django.shortcuts import render,redirect
 from usuarios.forms import CadastroForm, LoginForm
 
@@ -41,22 +42,18 @@ def cadastro(request):
         form = CadastroForm(request.POST) # HttpRequest.POST A dictionary-like object containing all given HTTP POST parameters
 
         if form.is_valid():
+            if form['senha_1'].value() != form['senha_2'].value():
+                messages.error(request, 'Senhas não são iguais!')
+                return redirect('cadastro')
+            
             nome = form['nome_cadastro'].value()
             email = form['email'].value()
             senha = form['senha_1'].value()
             username_already_exists = User.objects.filter(username=nome).exists()
-            email_already_exists = User.objects.filter(email=email).exists()
-
-            if form['senha_1'].value() != form['senha_2'].value():
+            
+            if username_already_exists:
                 messages.error(request, 'Senhas não são iguais!')
                 return redirect('cadastro')
-            elif username_already_exists:
-                messages.error(request, 'Nome de usuário já existente!')
-                return redirect('cadastro')
-            elif email_already_exists:
-                messages.error(request, 'E-mail já registrado!')
-                return redirect('cadastro') # takes an absolute url as parameter - > goest to setup.urls.py
-            
             else:
                 new_user = User.objects.create_user(
                     username=nome,
@@ -68,10 +65,13 @@ def cadastro(request):
                 new_user.save()
                 messages.success(request, 'Usuário criado com sucesso!')
                 return redirect('login')
-    else:
-        return render(request, 'usuarios/cadastro.html', {"form": form})
+    return render(request, 'usuarios/cadastro.html', {"form": form})
 
 def logout(request):
-    auth.logout(request)
-    messages.success(request, 'Logout efetuado com sucesso!')
-    return redirect('login')
+    if request.user.is_authenticated:
+        auth.logout(request)
+        messages.success(request, 'Logout efetuado com sucesso!')
+        return redirect('login')
+    else:
+        messages.success(request, 'Nenhum usuário logado!')
+        return redirect('login')

@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import User
 
 class LoginForm(forms.Form):
     nome_login = forms.CharField(
@@ -69,3 +70,22 @@ class CadastroForm(forms.Form):
             }
         )
     )
+    def clean_nome_cadastro(self): # clean no inicio referencia pro django que é uma validação
+        nome = self.cleaned_data.get('nome_cadastro')
+        if nome:
+            nome = nome.strip()
+            if " " in nome:
+                raise forms.ValidationError('Nome de usuário não pode conter espaços')
+            elif User.objects.filter(username=nome).exists():
+                raise forms.ValidationError('Nome de usuário em uso')
+            else:
+                return nome
+    def clean_senha_2(self):
+        senha_1 = self.cleaned_data.get('senha_1')
+        senha_2 = self.cleaned_data.get('senha_2')
+
+        if senha_1 and senha_2:
+            if senha_1 != senha_2:
+                raise forms.ValidationError('Senhas não conferem')
+            else:
+                return senha_2
