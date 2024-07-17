@@ -1,7 +1,6 @@
-from re import U
 from django.shortcuts import render,redirect
-from usuarios.forms import CadastroForm, LoginForm
 
+from apps.usuarios.forms import CadastroForm, LoginForm
 from django.contrib.auth.models import User # Important, User class to link with db params.
 from django.contrib import auth
 from django.contrib import messages
@@ -60,7 +59,7 @@ def cadastro(request):
             username_already_exists = User.objects.filter(username=nome).exists()
             
             if username_already_exists:
-                messages.error(request, 'Senhas não são iguais!')
+                messages.error(request, 'Nome de usuário já registrado!')
                 return redirect('cadastro')
             else:
                 new_user = User.objects.create_user(

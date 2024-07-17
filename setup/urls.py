@@ -23,6 +23,6 @@ from setup.settings import MEDIA_ROOT, MEDIA_URL
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('galeria.urls')),
-    path('', include('usuarios.urls')),
+    path('', include('apps.galeria.urls')),
+    path('', include('apps.usuarios.urls')),
 ] + static(settings.MEDIA_URL, document_root=MEDIA_ROOT)
