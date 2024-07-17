@@ -10,8 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from email import message
 from pathlib import Path, os
+from pyexpat.errors import messages
 from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
 
 load_dotenv()
 
@@ -138,3 +141,10 @@ MEDIA_URL = "/media/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# MESSAGES
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger', # REFERS TO BOOTSTRAP ALERT CLASS
+    messages.SUCCESS: 'success',
+    messages.INFO: 'warning',
+}

@@ -8,6 +8,9 @@ from django.contrib import messages
 
 
 def login(request):
+    if request.user.is_authenticated:
+        messages.info(request, 'Você já está logado!')
+        return redirect('home')
     form = LoginForm()
 
     if request.method == 'POST':
@@ -24,16 +27,21 @@ def login(request):
             )
             if usuario is not None:
                 auth.login(request, usuario)
-                messages.success(request, f"{nome} logado com sucesso!")
+                messages.success(request, f"Bem-vindo novamente {nome.title()} !")
                 return redirect('home')
+            elif not User.objects.filter(username=nome).exists():
+                messages.error(request, 'Nome de usuário invalido')
             else:
-                messages.error(request, 'Erro ao logar!')
+                messages.error(request, 'Senha incorreta!')
                 return redirect('login')
 
     return render(request, 'usuarios/login.html', {"form": form})
 
 
 def cadastro(request):
+    if request.user.is_authenticated:
+        messages.info(request, 'Você já possui uma conta!')
+        return redirect('home')
 
     form = CadastroForm()
 
