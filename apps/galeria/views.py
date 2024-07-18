@@ -2,10 +2,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from apps.galeria.models import Fotografia
 from apps.galeria.forms import FotografiaForms
 from django.db.models import Q
-from django.db import models
 from django.contrib import messages
-from django.utils import timezone
-from django.contrib.auth.models import User
+
+
 
 
 def index(request):
@@ -15,7 +14,7 @@ def index(request):
     
     fotografias = Fotografia.objects.order_by("-data_fotografia").filter(publicada=True)
     # messages.info(request, f'Logado como xxxx')
-    return render(request, 'galeria/index.html', {"cards": fotografias,})
+    return render(request, 'galeria/index.html', {"cards": fotografias})
 
 def imagem(request, foto_id):
     foto = get_object_or_404(Fotografia, pk=foto_id)
@@ -42,20 +41,32 @@ def nova_imagem(request):
         messages.error(request, 'Faça login para adicionar novas imagens')
         return redirect('login')
     
-    imagem = FotografiaForms
+    form = FotografiaForms
     if request.method == 'POST':
 
-        imagem = FotografiaForms(request.POST) # HttpRequest.POST A dictionary-like object containing all given HTTP POST parameters
+        form = FotografiaForms(request.POST, request.FILES) # HttpRequest.POST A dictionary-like object containing all given HTTP POST parameters
 
-        if imagem.is_valid():
-            imagem.save()
+        if form.is_valid():
+            form.save()
             messages.success(request, 'Nova imagem adicionada!')
-            return redirect(request, 'home')
+            return redirect('home')
+    return render(request, 'galeria/nova-imagem.html', {'form': form})
 
-    return render(request, 'galeria/nova-imagem.html', {'form': imagem})
+def editar_imagem(request, foto_id):
+    fotografia = Fotografia.objects.get(id=foto_id)
+    form = FotografiaForms(instance=fotografia)
+    if request.method == 'POST':
 
-def editar_imagem(request):
-    pass
+        form = FotografiaForms(request.POST, request.FILES, instance=fotografia) # HttpRequest.POST A dictionary-like object containing all given HTTP POST parameters
 
-def deletar_imagem(request):
-    pass
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Imagem editada')
+            return redirect('index')
+    return render(request, 'galeria/editar-imagem.html', {'form':form, 'foto_id': foto_id})
+
+def deletar_imagem(request, foto_id):
+    fotografia = Fotografia.objects.get(id=foto_id)
+    fotografia.delete()
+    messages.info(request, 'Fotografia deletada com sucesso')
+    return redirect('home')
